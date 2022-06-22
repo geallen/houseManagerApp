@@ -1,0 +1,251 @@
+{
+	"info": {
+		"_postman_id": "93e9b29f-2e41-4a87-ae66-8b5ed26ab774",
+		"name": "homeManagementApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6502216"
+	},
+	"item": [
+		{
+			"name": "getAllHouses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/house/getAll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"house",
+						"getAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "compareHouses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/house/getAll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"house",
+						"getAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addHouse",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"roomNumber\":4,\n\t\"floor\" : 7,\n\t\"size\" : \"140\",\n\t\"address\" : \"46523 Stutgart\"\n}\n\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/house/addHouse",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"house",
+						"addHouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addHouseInvalid",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"roomNumber\":4,\n\t\"floor\" : 7,\n\t\"size\" : \"140\",\n\t\"address\" : \"46523 Stutgart\"\n}\n\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/house/addHouse",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"house",
+						"addHouse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getHouseByAdress",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/house/getHouseByAddress/12456 Hamburg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"house",
+						"getHouseByAddress",
+						"12456 Hamburg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteHouse",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/house/deleteHouseByAddress/12456 Hamburg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"house",
+						"deleteHouseByAddress",
+						"12456 Hamburg"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteHouseInvalid",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/house/deleteHouseByAddress/12456 Hamburg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"house",
+						"deleteHouseByAddress",
+						"12456 Hamburg"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateHouse",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"roomNumber\":2,\n\t\"floor\" : 4,\n\t\"size\" : \"140\",\n\t\"address\" : \"46523 Munich\"\n}\n\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/house/updateHouse/85632 Munich",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"house",
+						"updateHouse",
+						"85632 Munich"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
