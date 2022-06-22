@@ -1,0 +1,5 @@
+com/house/management/service/HouseService.class
+com/house/management/repository/HouseRepository.class
+com/house/management/model/House.class
+com/house/management/HomeManagerApp.class
+com/house/management/HouseController.class
