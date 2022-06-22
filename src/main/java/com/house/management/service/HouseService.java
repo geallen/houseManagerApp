@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class HouseService {
@@ -60,23 +59,6 @@ public class HouseService {
         }else{
             throw new NotFoundException("House with address " + updatedHouse.getAddress()+ " does not exist.");
         }
-
     }
 
-    /* public House getSubscriberByUsername(String username){
-
-        return subscriberRepository.findByUsername(username);
-    }
-
-    public void deleteSubscriberByUsername(String username){
-        House subscriberWithGivenName = subscriberRepository.findByUsername(username);
-
-        if(subscriberWithGivenName != null) {
-            subscriberRepository.deleteById(subscriberWithGivenName.getId());
-        }else {
-            throw new NoSuchElementException();
-        }
-
-    }
-*/
 }

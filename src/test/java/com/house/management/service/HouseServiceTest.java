@@ -12,13 +12,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -44,31 +48,77 @@ public class HouseServiceTest {
         house3 = new House(1, 2, 23, "12456 Hamburg");
     }
 
+
     @Test
-    public void deletePatientById_norecord() throws Exception {
-        Mockito.when(houseRepository.getHouseByAddress(house2.getAddress())).thenReturn(null);
+    public void testGetAllHouses() throws Exception {
 
+        List<House> houseList = new ArrayList<>(Arrays.asList(house1, house2, house3));
 
-        //doNothing().when(houseRepository).deleteById(anyInt());
-      //  houseService.deleteHouseByAddress("house2.getAddress()");
+        Mockito.when(houseRepository.findAll()).thenReturn(houseList);
 
-        verify(houseService, times(1)).deleteHouseByAddress("house2.getAddress()");
+        List<House> houseListTest = houseService.getAllHouses();
 
-    //    ResponseEntity<String> responseEntity = houseService.deleteHouseByAddress("house2.getAddress()");
+        assertEquals(3, houseList.size());
 
-       /* assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("House with given address deleted successfully!", responseEntity.getBody());
-*/
+        assertEquals("Address should be 85632 Munich", house1.getAddress(), houseListTest.get(0).getAddress());
+        assertEquals("Size should be 23", house2.getSize(), houseListTest.get(1).getSize());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/deleteHouseByAddress/house2.getAddress()")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                /*.andExpect(result ->
-                        assertTrue(result.getResolvedException() instanceof NotFoundException))*/
-                .andExpect(result ->
-                        assertEquals("Patient with ID 5 does not exist.", result.getResolvedException().getMessage()));
     }
 
+    @Test
+    public void testGetHouseByAddressWhenHouseExists() throws Exception {
+        Mockito.when(houseRepository.getHouseByAddress(house1.getAddress())).thenReturn(house1);
+
+        House houseTest = houseService.getHouseByAddress(house1.getAddress());
+
+        assertEquals(23, houseTest.getSize());
+        assertEquals(1, houseTest.getRoomNumber());
+        assertEquals(2, houseTest.getFloor());
+
+    }
+
+    @Test
+    public void testGetHouseByAddressWhenHouseNotExists() throws Exception {
+        Mockito.when(houseRepository.getHouseByAddress("Izmir Turkey")).thenReturn(null);
+
+        House houseTest = houseService.getHouseByAddress("Izmir Turkey");
+
+        assertNull(houseTest);
+    }
+
+    @Test
+    public void testAddHouse() throws Exception {
+        House record = new House(5, 3, 154, "45231 Ulm");
+
+        Mockito.when(houseRepository.save(record)).thenReturn(record);
+        House addedHouse = houseService.addHouse(record);
+
+        assertEquals(record.getAddress(), addedHouse.getAddress());
+        assertEquals(record.getRoomNumber(), addedHouse.getRoomNumber());
+        assertEquals(record.getFloor(), addedHouse.getFloor());
+        assertEquals(record.getSize(), addedHouse.getSize());
+
+    }
+
+
+    @Test
+    public void testDeleteHouseWhenHouseExists() throws Exception {
+        when(houseRepository.getHouseByAddress(anyString())).thenReturn(house2);
+
+        houseService.deleteHouseByAddress(house2.getAddress());
+
+        verify(houseRepository, times(1)).deleteById(house2.getId());
+
+    }
+
+    @Test
+    public void testDeleteHouseWhenHouseNotExists() throws Exception {
+
+        when(houseRepository.getHouseByAddress(house2.getAddress())).thenReturn(null);
+        Throwable exception = assertThrows(NoSuchElementException.class, () -> houseService.deleteHouseByAddress(house2.getAddress()));
+        assertEquals(NoSuchElementException.class, exception.getClass());
+
+
+    }
 
 }
