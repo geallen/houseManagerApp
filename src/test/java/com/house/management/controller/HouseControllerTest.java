@@ -101,7 +101,6 @@ public class HouseControllerTest {
     }
 
 
-
     @Test
     public void testDeleteHouseWhenHouseExists() throws Exception {
         doNothing().when(houseService).deleteHouseByAddress(anyString());

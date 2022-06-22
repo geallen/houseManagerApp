@@ -24,14 +24,7 @@ public class HouseController {
     @Autowired
     private HouseService houseService;
 
-    @RequestMapping(value = "/showTodo", method = RequestMethod.GET)
-    @ResponseBody
-    public String showTodoPage() {
-        return "todo";
-    }
-
     @GetMapping(path = "/getAll", produces = { MediaType.APPLICATION_JSON_VALUE })
-    //  @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public @ResponseBody List<House> getAllHouses() {
         return houseService.getAllHouses();
     }
@@ -58,7 +51,6 @@ public class HouseController {
     }
 
     @GetMapping(path = "getHouseByAddress/{address}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     public @ResponseBody House getHouseByAddress(@Valid @PathVariable String address) {
 
         House house = houseService.getHouseByAddress(address);
@@ -71,7 +63,6 @@ public class HouseController {
     }
 
     @DeleteMapping(path = "deleteHouseByAddress/{address}")
-  //  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> deleteHouseByAddress(@Valid @PathVariable String address) {
 
         try {
