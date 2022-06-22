@@ -3,6 +3,7 @@ package com.house.management.model;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.util.Objects;
 
 @Entity
 @Table(name = "HOUSE")
@@ -75,5 +76,18 @@ public class House {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        House house = (House) o;
+        return id == house.id && roomNumber == house.roomNumber && floor == house.floor && size == house.size && Objects.equals(address, house.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, roomNumber, floor, size, address);
     }
 }

@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/house")
@@ -42,7 +45,7 @@ public class HouseController {
                 t = t.getCause();
             }
             if (t instanceof ConstraintViolationException) {
-                return new ResponseEntity<>("House with same properties already recorded!", HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("House with same properties already recorded!", HttpStatus.BAD_REQUEST);
             }
         }
         return new ResponseEntity<>("House added successfully!", HttpStatus.OK);
@@ -80,7 +83,7 @@ public class HouseController {
             MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE })
     public ResponseEntity<String> updateHouse(@PathVariable String address,
-                                               @RequestBody House updatedHouse) {
+                                               @RequestBody @Valid House updatedHouse) {
 
         try {
             houseService.updateHouse(address, updatedHouse);
@@ -90,5 +93,15 @@ public class HouseController {
                     HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping(path = "/compareHouses", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody List<House> compareHouses() {
+        List<House> houseList = houseService.getAllHouses();
+        Comparator<House> comparator = Comparator.comparing(House::getId);
+
+       return houseList.stream().sorted(comparator.reversed()).collect(Collectors.toList());
+
+    }
+
 
 }
