@@ -1,6 +1,5 @@
 package com.house.management.controller;
 
-import com.house.management.controller.HouseController;
 import com.house.management.model.House;
 import com.house.management.service.HouseService;
 import org.junit.jupiter.api.Assertions;
@@ -11,14 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,11 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
@@ -46,8 +38,6 @@ public class HouseControllerTest {
     House house2;
     House house3;
 
-    @Autowired
-    private MockMvc mockMvc;
     @BeforeEach
     void setUp(){
         house1 = new House(1, 2, 23, "85632 Munich");
@@ -62,7 +52,6 @@ public class HouseControllerTest {
 
         Mockito.when(houseService.getAllHouses()).thenReturn(houseList);
 
-
         List<House> houseListTest = houseController.getAllHouses();
 
         assertEquals(3, houseList.size());
@@ -70,19 +59,10 @@ public class HouseControllerTest {
         assertEquals("Address should be 85632 Munich", house1.getAddress(), houseListTest.get(0).getAddress());
         assertEquals("Size should be 23", house2.getSize(), houseListTest.get(1).getSize());
 
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/house/getAll")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-               // .andExpect(jsonPath("$", hasSize(3)))
-            //    .andExpect(jsonPath("$[0].floor", is("Lorem ipsum")))
-               ;
-
     }
 
     @Test
-    public void getHouseByAddress_success() throws Exception {
+    public void testGetHouseByAddressWhenHouseExists() throws Exception {
         Mockito.when(houseService.getHouseByAddress(house1.getAddress())).thenReturn(house1);
 
         House houseTest = houseController.getHouseByAddress(house1.getAddress());
@@ -94,7 +74,7 @@ public class HouseControllerTest {
     }
 
     @Test
-    public void getHouseByAddress_nosuccess() throws Exception {
+    public void testGetHouseByAddressWhenHouseNotExists() throws Exception {
         Mockito.when(houseService.getHouseByAddress("Izmir Turkey")).thenReturn(null);
 
         ResponseStatusException thrown = Assertions
@@ -108,7 +88,7 @@ public class HouseControllerTest {
     }
 
     @Test
-    public void createRecord_success() throws Exception {
+    public void testAddHouse() throws Exception {
         House record = new House(5, 3, 154, "45231 Ulm");
 
         Mockito.when(houseService.addHouse(record)).thenReturn(record);
@@ -123,10 +103,7 @@ public class HouseControllerTest {
 
 
     @Test
-    public void deletePatientById_success() throws Exception {
-     //   Mockito.when(houseService.deleteHouseByAddress(house2.getAddress())).thenReturn(null);
-
-
+    public void testDeleteHouseWhenHouseExists() throws Exception {
         doNothing().when(houseService).deleteHouseByAddress(anyString());
         houseController.deleteHouseByAddress(house2.getAddress());
 
@@ -137,14 +114,10 @@ public class HouseControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("House with given address deleted successfully!", responseEntity.getBody());
 
-        /*mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/patient/2")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());*/
     }
 
     @Test
-    public void deletePatientById_norecords() throws NoSuchElementException {
+    public void testDeleteHouseWhenHouseNotExists() throws NoSuchElementException {
         doThrow(new NoSuchElementException()).when(houseService).deleteHouseByAddress("Izmir Turkey");
 
         ResponseEntity<String> responseEntity = houseController.deleteHouseByAddress("Izmir Turkey");

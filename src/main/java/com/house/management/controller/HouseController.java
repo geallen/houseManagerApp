@@ -2,6 +2,7 @@ package com.house.management.controller;
 
 import com.house.management.model.House;
 import com.house.management.service.HouseService;
+import javassist.NotFoundException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -67,7 +68,6 @@ public class HouseController {
 
         }
         return house;
-
     }
 
     @DeleteMapping(path = "deleteHouseByAddress/{address}")
@@ -85,77 +85,19 @@ public class HouseController {
 
     }
 
-    /*@GetMapping(path = "getSubscriberByUsername/{username}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
-    public @ResponseBody Subscriber getSubscriberByUsername(@Valid @PathVariable String username) {
-
-        Subscriber subscriber = subscriberService.getSubscriberByUsername(username);
-        if(subscriber == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Subscriber with given username not found!");
-
-        }
-        return subscriber;
-
-    }*/
-
-
-   /* @PostMapping(path = "/addSubscriber", consumes = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> addSubscriber(ModelMap model, @Valid @RequestBody Subscriber subscriber) {
-
-        try{
-            subscriberService.createOrUpdateTodo(subscriber);
-            model.clear();
-
-        } catch (Exception e) {
-            Throwable t = e.getCause();
-            while ((t != null) && !(t instanceof ConstraintViolationException)) {
-                t = t.getCause();
-            }
-            if (t instanceof ConstraintViolationException) {
-                return new ResponseEntity<>("Subscriber with username already recorded!", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-        return new ResponseEntity<>("Subscriber recorded successfully!", HttpStatus.OK);
-
-    }
-
-    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
-    public @ResponseBody List<Subscriber> getAllSubscribers() {
-        return subscriberService.getAllSubscribers();
-    }
-
-    @GetMapping(path = "getSubscriberByUsername/{username}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
-    public @ResponseBody Subscriber getSubscriberByUsername(@Valid @PathVariable String username) {
-
-        Subscriber subscriber = subscriberService.getSubscriberByUsername(username);
-        if(subscriber == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Subscriber with given username not found!");
-
-        }
-        return subscriber;
-
-    }
-
-    @DeleteMapping(path = "deleteSubscriberByUsername/{username}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteSubscriberByUsername(@Valid @PathVariable String username) {
+    @PutMapping(path = "updateHouse/{address}", produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE })
+    public ResponseEntity<String> updateHouse(@PathVariable String address,
+                                               @RequestBody House updatedHouse) {
 
         try {
-            subscriberService.deleteSubscriberByUsername(username);
-
-            return new ResponseEntity<String>("Subcriber with givenusername deleted successfully!", HttpStatus.OK);
-
-        } catch (EmptyResultDataAccessException | NoSuchElementException e) {
-            return new ResponseEntity<String>("Delete operation failed.Because no subscriber found with given username!", HttpStatus.NOT_FOUND);
+            houseService.updateHouse(address, updatedHouse);
+            return new ResponseEntity<String>("House updated succesfully!", HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<String>("Update failed because no house with given address found!",
+                    HttpStatus.NOT_FOUND);
         }
-
-    }*/
-
+    }
 
 }

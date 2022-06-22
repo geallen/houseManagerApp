@@ -2,12 +2,14 @@ package com.house.management.service;
 
 import com.house.management.model.House;
 import com.house.management.repository.HouseRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class HouseService {
@@ -44,6 +46,23 @@ public class HouseService {
         }
 
     }
+
+    public void updateHouse(String address, House updatedHouse) throws NotFoundException {
+        House existingHouse= houseRepository.getHouseByAddress(address);
+
+        if(existingHouse !=null){
+            existingHouse.setAddress(updatedHouse.getAddress());
+            existingHouse.setFloor(updatedHouse.getFloor());
+            existingHouse.setRoomNumber(updatedHouse.getRoomNumber());
+            existingHouse.setSize(updatedHouse.getSize());
+
+            houseRepository.save(existingHouse);
+        }else{
+            throw new NotFoundException("House with address " + updatedHouse.getAddress()+ " does not exist.");
+        }
+
+    }
+
     /* public House getSubscriberByUsername(String username){
 
         return subscriberRepository.findByUsername(username);
