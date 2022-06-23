@@ -23,11 +23,8 @@ public class HouseService {
     }
 
     public List<House> getAllHouses(){
-        List<House> houseList = houseRepository.findAll();
-        if(houseList.size()> 0) {
-            return houseList;
-        }
-        return new ArrayList<House>();
+        return houseRepository.findAll();
+
     }
 
     public House getHouseByAddress(String address){
